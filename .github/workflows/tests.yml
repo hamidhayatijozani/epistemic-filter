@@ -16,6 +16,14 @@ jobs:
           python-version: "3.12"
       - name: Run unit and integration contract tests
         run: python -m unittest discover -s tests -v
+      - name: Evaluate labeled claim dataset
+        run: python scripts/evaluate_dataset.py --output artifacts/evaluation-report.json
+      - name: Upload evaluation report
+        uses: actions/upload-artifact@v4
+        with:
+          name: epistemic-filter-evaluation-report
+          path: artifacts/evaluation-report.json
+          if-no-files-found: error
       - name: Validate 200-event JSON fixture
         run: |
           python - <<'PY'
