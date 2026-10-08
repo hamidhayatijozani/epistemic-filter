@@ -1,0 +1,28 @@
+name: Epistemic Filter tests
+
+on:
+  push:
+    branches: ["master", "poc/epistemic-filter-runtime-v1"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run unit and integration contract tests
+        run: python -m unittest discover -s tests -v
+      - name: Validate 200-event JSON fixture
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          events = json.loads(Path("poc/sample_events.json").read_text())
+          assert len(events) == 200, f"expected 200 events, got {len(events)}"
+          assert all(isinstance(event, dict) for event in events)
+          print(f"validated_events={len(events)}")
+          PY

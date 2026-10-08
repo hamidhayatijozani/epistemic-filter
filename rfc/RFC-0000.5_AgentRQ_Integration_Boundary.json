@@ -1,0 +1,66 @@
+{
+  "rfc_id": "RFC-0000.5",
+  "title": "AgentRQ Integration Boundary",
+  "status": "Draft",
+  "version": "0.1.0",
+  "components": {
+    "Event_Contract": {
+      "type": "POST /events",
+      "required_fields": [
+        "event_id",
+        "workspace_id",
+        "tool_name",
+        "tool_params",
+        "context",
+        "timestamp"
+      ],
+      "note": "Transport/API server is not implemented by this Python library."
+    },
+    "Decide_API": {
+      "endpoint": "POST /decide",
+      "input_schema": "DecideRequest",
+      "output_schema": "DecisionObject",
+      "response_fields": [
+        "verdict",
+        "categories",
+        "confidence",
+        "rationale",
+        "source_id",
+        "scope"
+      ],
+      "note": "Library function exists; HTTP endpoint is a future adapter."
+    },
+    "Constraints": {
+      "default_timeout_ms": 500,
+      "fallback_modes": [
+        "FAIL_CLOSED",
+        "ALLOW_WITH_MITIGATION",
+        "ALLOWLIST"
+      ],
+      "security": [
+        "TLS 1.2+",
+        "Mutual TLS",
+        "Bearer Token"
+      ],
+      "note": "These are integration requirements, not implemented controls in this repository."
+    },
+    "Acceptance_Criteria": {
+      "min_events": 200,
+      "labeled_samples": 50,
+      "p50_latency_ms": 300,
+      "replay_capability_percent": 95,
+      "note": "Targets only; must be measured in a reproducible run before claiming acceptance."
+    }
+  },
+  "verdicts": [
+    "VALID",
+    "WEAK",
+    "INVALID"
+  ],
+  "limitations": [
+    "Heuristic screening, not truth verification.",
+    "VALID means no configured heuristic fired.",
+    "Confidence is not a calibrated probability.",
+    "No network server or authentication layer is included."
+  ]
+}
