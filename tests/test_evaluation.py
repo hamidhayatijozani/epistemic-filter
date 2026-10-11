@@ -1,6 +1,7 @@
 import unittest
 from pathlib import Path
 
+from epistemic_filter import VERSION
 from scripts.evaluate_dataset import evaluate_dataset, load_dataset, stable_result
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -22,6 +23,7 @@ class EvaluationHarnessTests(unittest.TestCase):
     def test_curated_smoke_dataset_matches_declared_labels(self):
         report = evaluate_dataset(DATASET)
         self.assertEqual(report["dataset_size"], 20)
+        self.assertEqual(report["runtime_version"], VERSION)
         self.assertEqual(report["mismatches"], [])
         self.assertEqual(report["verdict_metrics"]["accuracy"], 1.0)
         self.assertEqual(report["flagged_vs_unflagged"]["precision"], 1.0)
