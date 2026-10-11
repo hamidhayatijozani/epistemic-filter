@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from epistemic_filter import evaluate_claim  # noqa: E402
+from epistemic_filter import VERSION, evaluate_claim  # noqa: E402
 
 LABELS = ("INVALID", "WEAK", "VALID")
 
@@ -118,7 +118,7 @@ def evaluate_dataset(path: Path) -> dict[str, Any]:
         "dataset_path": str(path),
         "dataset_sha256": dataset_sha256,
         "dataset_size": len(rows),
-        "runtime_version": "0.1.0",
+        "runtime_version": VERSION,
         "git_commit": os.environ.get("GITHUB_SHA", "UNKNOWN"),
         "label_semantics": "agreement with curated screening-policy labels; not factual truth",
         "verdict_metrics": classification_metrics(expected, predicted),
