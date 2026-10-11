@@ -1,12 +1,12 @@
 # Epistemic Filter
 
-**Status:** executable research prototype (v0.1.0)  
+**Status:** executable research prototype (v0.2.0)  
 **Canonical integration lineage:** HHJ-CSG / AgentRQ  
 **License:** MIT (see `LICENSE`)
 
 ## English
 
-Epistemic Filter is a deterministic, explainable screening layer for claims emitted by agents. It flags configured patterns such as absolute guarantees, category errors, missing evidence, missing scope, and missing provenance.
+Epistemic Filter is a deterministic, explainable screening layer for claims emitted by agents. It flags configured patterns such as absolute guarantees, broad group-level overgeneralizations, category errors, missing evidence, missing scope, and missing provenance.
 
 **Important boundary:** it is a heuristic triage tool, not an LLM, fact checker, truth oracle, security boundary, or substitute for human review. `VALID` means only that no configured heuristic fired; it does **not** mean the claim is true. Confidence is a rule-status indicator, not a calibrated probability.
 
@@ -40,14 +40,14 @@ PY
 ### Decision semantics
 
 - `INVALID`: a configured category-error pattern, or absolute guarantee without evidence.
-- `WEAK`: missing scope/provenance/evidence or another configured concern.
+- `WEAK`: missing scope/provenance/evidence or another configured concern, including detected overgeneralization. The rule is a prompt for narrower scope, not proof that the claim is false.
 - `VALID`: no configured heuristic fired and basic evidence/scope/source metadata was supplied. Not proof of truth.
 
 The output includes categories, rationale, scope, source identifier, timestamp, and explicit limitations. The prototype does not expose an HTTP API; the RFC's `POST /events` and `POST /decide` are integration proposals, not implemented endpoints.
 
 ## فارسی
 
-Epistemic Filter یک لایهٔ غربال‌گری قطعی و قابل‌توضیح برای ادعاهای تولیدشده توسط Agentها است. این ابزار الگوهایی مانند تضمین مطلق، خطای مقوله‌ای، نبود شواهد، نبود دامنهٔ ادعا و نبود منشأ داده را علامت‌گذاری می‌کند.
+Epistemic Filter یک لایهٔ غربال‌گری قطعی و قابل‌توضیح برای ادعاهای تولیدشده توسط Agentها است. این ابزار الگوهایی مانند تضمین مطلق، تعمیم بیش‌ازحد دربارهٔ یک گروه، خطای مقوله‌ای، نبود شواهد، نبود دامنهٔ ادعا و نبود منشأ داده را علامت‌گذاری می‌کند.
 
 **مرز مهم:** این ابزار نمونهٔ پژوهشی مبتنی بر قواعد است؛ حقیقت‌سنج، مدل زبانی، مرز امنیتی یا جایگزین بازبینی انسانی نیست. وضعیت `VALID` فقط یعنی هیچ قاعدهٔ تعریف‌شده‌ای فعال نشده است، نه اینکه ادعا حقیقت دارد. مقدار confidence نیز احتمال کالیبره‌شده نیست.
 

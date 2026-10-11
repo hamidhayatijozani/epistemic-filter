@@ -9,12 +9,17 @@ import re
 from datetime import datetime, timezone
 from typing import Any, Mapping
 
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 
 _ABSOLUTES = (
     r"\balways\b", r"\bnever\b", r"\bguaranteed?\b", r"\b100\s*%\b",
     r"\bzero risk\b", r"\bimpossible to fail\b", r"\ball (?:users|systems|cases)\b",
     r"\bproven (?:safe|secure|effective|to work)\b",
+)
+_OVERGENERALIZATION_PATTERNS = (
+    r"\b(?:all|every|each|any|no)\s+(?:current\s+)?(?:ai\s+)?(?:agents?|models?|systems?|tools?|users?|cases?|companies|markets?)\b",
+    r"\b(?:agents?|models?|systems?|tools?)\s+(?:always|never|cannot|can't|will always|will never)\b",
+    r"\b(?:universally|across the board|in every case|without exception)\b",
 )
 _CATEGORY_ERROR_PATTERNS = (
     (r"\bthe model (?:wants|believes|knows|intends)\b", "Anthropomorphic mental-state wording needs operational definition."),
@@ -54,6 +59,12 @@ def evaluate_claim(
         findings.append({
             "category": "OVERCLAIM",
             "message": "Absolute or guarantee language requires unusually strong, scoped evidence.",
+        })
+
+    if any(re.search(pattern, lower) for pattern in _OVERGENERALIZATION_PATTERNS):
+        findings.append({
+            "category": "OVERGENERALIZATION",
+            "message": "A broad group-level statement may exceed the evidence scope; narrow the population or provide representative support.",
         })
 
     evidence_present = evidence is not None and evidence != "" and evidence != [] and evidence != {}

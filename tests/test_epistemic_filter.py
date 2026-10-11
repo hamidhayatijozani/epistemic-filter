@@ -19,6 +19,27 @@ class EpistemicFilterTests(unittest.TestCase):
         self.assertEqual(result["verdict"], "INVALID")
         self.assertIn("CATEGORY_ERROR", result["categories"])
 
+    def test_overgeneralization_is_flagged_without_claiming_factuality(self):
+        result = evaluate_claim(
+            "All AI agents are unreliable.",
+            evidence={"sample": "three agents"},
+            scope="three agents in one local test",
+            source_id="run-2",
+        )
+        self.assertEqual(result["verdict"], "WEAK")
+        self.assertIn("OVERGENERALIZATION", result["categories"])
+        self.assertIn("narrow the population", result["rationale"])
+
+    def test_scoped_non_generalization_is_not_flagged(self):
+        result = evaluate_claim(
+            "In test run R-17, two of three agents timed out.",
+            evidence={"artifact": "run-17"},
+            scope="three agents in one local test",
+            source_id="run-17",
+        )
+        self.assertEqual(result["verdict"], "VALID")
+        self.assertNotIn("OVERGENERALIZATION", result["categories"])
+
     def test_missing_scope_and_provenance_are_weak(self):
         result = evaluate_claim("The latency was 120 ms.", evidence={"measurement": 120})
         self.assertEqual(result["verdict"], "WEAK")
