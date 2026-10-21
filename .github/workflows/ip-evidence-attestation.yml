@@ -3,7 +3,7 @@ name: IP Evidence Attestation
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [master]
     paths:
       - 'IP/OWNERSHIP_EVIDENCE.md'
       - '.github/workflows/ip-evidence-attestation.yml'
